@@ -92,4 +92,3 @@ declare global {
   }
 }
 window.navigateTo = navigateTo;
-const brokenTypeError: string = 12345;
