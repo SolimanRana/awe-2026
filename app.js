@@ -430,6 +430,7 @@ function getFilteredEvidence() {
   return results;
 }
 
+// DEMO 3
 function renderEvidenceList() {
   var container = document.getElementById("evidenceList");
   if (!container) return;
@@ -448,9 +449,11 @@ function renderEvidenceList() {
   if (results.length === 0) {
     html = "<p>No evidence matches the current filters.</p>";
   }
+  // builds HTML for ALL cards again, not just the changed one
   for (var i = 0; i < results.length; i++) {
     html += renderEvidenceCardHTML(results[i]);
   }
+  // innerHTML throws away old cards and creates all of them new
   container.innerHTML = html;
 
   // Event delegation for card clicks / bookmark button.
@@ -520,6 +523,7 @@ function handleEvidenceListClick(event) {
   }
 }
 
+// DEMO 3 - only one book mark changes
 function handleBookmarkClick(evidenceId) {
   var ev = findEvidenceById(evidenceId);
   if (!ev) return;
@@ -534,6 +538,7 @@ function handleBookmarkClick(evidenceId) {
     ev.bookmarked = false;
   }
   saveBookmarksToStorage();
+  // WHOLE evidence list is rendered again
   if (currentPage === "evidence") renderEvidenceList();
 }
 

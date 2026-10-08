@@ -45,10 +45,34 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 
 - [ ] Give a concise explanation of how web applications evolved over the years and place the app from the exercises on the timeline. Justify where you put it.
 
+  **Answer:**
+
+  no stage replaces an earlier stage, each stage fixed a limitation on the one before.
+
+  ![alt text](image.png)
+
+  - Static Web: HTML files connected with links. Every click loads another page.
+  - Dynamic SSR/MPA: The server builds the HTML on request from a template and data. Every navigation still loads a new page/full document reload.
+  - AJAX: JavaScript gets data in the background and updates only one part of the page.
+  - CSR/SPA: The browser gets a shell plus JavaScript and builds the page itself. One page stays and shows all the views.
+  - Hybrid: The server renders the first view, then the browser takes over.
+
+  App sits on step 4 - CSR / SPA
+  - CSR: the server only sends a shell, and the browser builds the content from JSON data.
+  - SPA: switching views doesn't load a new page.
+
 **Questions** (depend on the tasks above)
 
 - [ ] What specific problem was AJAX (and libraries like jQuery) solving that plain server-rendered pages couldn't? What new problems did that approach introduce, that SPA frameworks then tried to solve?
+
+  **Problem AJAX solved:** every interaction meant a full document request. The browser threw away the current page and loaded a new one. AJAX let JavaScript get the data in the background and updates just one part of the page.
+  Back then, browsers implemented the same things differently, so you had to write different code for each browser.jQuery made it easier by hiding those differences.
+
+  **new problems:** The new problem was state. More and more data lived in the browser and was changed in many different places, so it got hard to know which data is correct and which parts of the page need an update."
+
 - [ ] This app currently uses hash-based routing (`#dashboard`, `#evidence`, ...) with no full page reload between views. Which era does that pattern belong to, and what does it tell you about when this architectural choice became common?
+
+  It belongs to step four, the SPA era, because the views change without loading a new page. It became common when AJAX pages turned into real applications that stay open and keep their state in the browser. They needed a URL for every view, but without a reload, and the hash does exactly that.
 
 ---
 
@@ -57,13 +81,37 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 **Tasks**
 
 - [ ] Present a short comparison table for Server-Side Rendering and Client-Side Rendering. Explain what the server sends on first request, what the browser has to do before the user sees content, and what happens on subsequent navigation.
+
+  ![alt text](image-1.png)
+
+  **SSR:** the server sends a complete HTML page. The browser just parses it and shows it, and every navigation loads a new page.
+
+  **CSR:** the server only sends a small shell plus JavaScript. The browser has to load and run the JavaScript, get the data and build the DOM itself. And when you navigate, the page stays and only the view changes.
+
 - [ ] Pick one real, publicly known website and argue whether it's (primarily) SSR or CSR, using
       observable evidence (view source, network tab, etc.).
+
+  wikipedia article: https://en.wikipedia.org/wiki/Single-page_application#Page_lifecycle
+
+  SSR because the article text is already in the HTML that the server sent. And when I click a link, a new document is requested and the page is replaced.
 
 **Questions** (depend on the tasks above)
 
 - [ ] Explain why this exercise application is SSR or CSR and why. Walk through, step by step, what happens between the browser requesting the page and the Dashboard actually being visible.
+
+  Our app is client-side rendered, because the HTML for the content is built in the browser, not on the server.
+
+  **Step by step:**
+
+  1. the browser requests the page and gets index.html. That's only a shell with a loading screen.
+  2. it loads the JavaScript and the CSS.
+  3. the JavaScript runs and starts the app.
+  4. it fetches five JSON files with the case data.
+  5. renderDashboard builds the HTML and writes it into the page with innerHTML. Now the Dashboard is visible.
+
 - [ ] Name one real cost of what the architecture pays for that choice (think about what a user with JavaScript disabled, or a slow connection, or a search engine crawler would see) and why.
+
+  The cost is the first load. There's nothing useful in the HTML until the JavaScript has run. So a user with JavaScript disabled only sees a loading screen, forever.
 
 ---
 
@@ -72,13 +120,29 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 **Tasks**
 
 - [ ] In your own words (a few sentences, not a copied definition), explain what the virtual DOM is and what problem it solves.
+
+  It is a description of the UI that React keeps in memory. It is not a copy of thereal DOM, it just says what the UI should look like. When sth changes, React builds a new description, compares it with the old one and only writes the differences to the real DOM.
+
+  **The problem it solves:**
+  without it my code has to know what is in the DOM right now and change it step by step. With the virtual DOM, I just describe the result, and React works out the changes.
+
 - [ ] Find one concrete example in the _original_ vanilla `app.js` (from before Exercise 1) where a small state change (e.g. toggling one bookmark) caused a large chunk of real DOM to be recreated via `innerHTML`, even though only a tiny part of it actually needed to change.
+
+  in app.js: The function gets one id, finds one evidence item, and adds or removes this one id from the bookmarks. There is no loop here, so the other items are not touched.
 
 **Questions** (depend on the tasks above)
 
 - [ ] Using the example you found: how would a virtual-DOM-based approach (conceptually, not necessarily React-specific) avoid recreating the parts that didn't change?
+
+  It would build a new description of all 18 cards and compare it with the old one. Seventeen cards are the same, so they stay untouched. Only for the one bookmarked card, the star and the class are updated in the real DOM.
+
 - [ ] Is the virtual DOM a "faster" way to update the real DOM than directly calling `innerHTML`? Explain precisely what's actually being traded off (think about the diffing work itself).
+
+  Not automatically. The comparison itself costs work, because React has to build and compare the descriptions in JavaScript. So that's the trade-off: you pay for the diffing, and in return only the parts that changed are touched in the real DOM. Changing one element directly by hand can be faster. But compared to replacing everything with innerHTML, far fewer DOM nodes are recreated.
+
 - [ ] Does using a virtual DOM library automatically make your app fast? What could still make a React app slow despite it?
+
+  No. A React app can still be slow. For example if components do expensive calculations, if big lists re-render when they don't need to, or if state sits too high up in the tree.
 
 ---
 
@@ -87,6 +151,9 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 **Tasks**
 
 - [ ] Diagram or illustrate live how navigation currently works in this app: what triggers a view change, what code runs, and what does _not_ happen (that would happen in a classic multi-page site).
+
+  ![alt text](image-2.png)
+
 - [ ] List every piece of state in the current app that would be lost on a full page reload, versus what's preserved (hint: check what's in `localStorage` versus what's only in memory).
 
 **Questions** (depend on the tasks above)
@@ -102,14 +169,29 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 **Tasks**
 
 - [ ] Read enough of the React docs (or equivalent) to write, from scratch, a single tiny component (it can live in a throwaway sandbox, not necessarily this project yet) that renders a piece of static data as JSX. No state, no props even, just to prove you can write and reason about JSX.
+
+  normal JS function that returns JSX. Inside I have an object with static data, and the curly braces put its values into the JSX.
+  ![alt text](image-3.png)
+  ![alt text](image-4.png)
+
 - [ ] Identify, in your own words, what "component" means in React, and how it differs from a plain JavaScript function that happens to return an HTML string (which is essentially what several functions in the old `app.js` did, e.g. `renderEvidenceCardHTML()`).
+
+  A component is a function that returns a description of a piece of the UI, and React calls it. renderEvidenceCardHTML is also a function, but it returns an HTML string. And our own code has to put that string into the page with innerHTML.
 
 **Questions** (depend on the tasks above)
 
 - [ ] What is JSX, actually? What does it compile to?
+
+  JSX is JavaScript syntax that looks like HTML. The browser can not read it. During the build, it's compiled to normal JavaScript function calls that create React elements. Those are objects that describe the UI.
+
 - [ ] Compare your tiny component to the old `renderEvidenceCardHTML(ev)` function (string concatenation returning an HTML string). What is fundamentally different about how each one's output becomes real DOM?
+
+  The old function returns a string. We assign it to innerHTML, and the browser throws away the old nodes and builds everything new. My component returns React elements. React compares them with the previous ones and only changes what's different in the real DOM.
+
 - [ ] What does it mean that "components are just functions" in React? What would break if a
       component's function body had a side effect (e.g. mutated a global variable) every time it rendered?
+
+  It means React just calls the function and uses what it returns. With the same input, it should return the same output. If it changed a global variable on every render, the result would be unpredictable, because React can call a component more than once. So you couldn't rely on that value.
 
 ---
 

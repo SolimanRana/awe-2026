@@ -10,7 +10,8 @@
     "checkJs": false,
     "noEmit": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx"
   },
-  "include": ["js/**/*"]
+  "include": ["js/**/*", "src/**/*"]
 }

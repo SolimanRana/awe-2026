@@ -1,23 +1,4 @@
-// ---------------------------------------------------------------------
 // NAVIGATION / HASH ROUTING
-// ---------------------------------------------------------------------
-//
-// Both functions are needed elsewhere: navigateTo from onclick="..." in
-// index.html (-> window) and from other view modules (-> named export);
-// handleHashChange from main.js, to wire up the hashchange listener and
-// to run once on startup.
-//
-// DEMO 10 - deliberately NOT converted to arrow functions: this module and
-// views/people.js import from each other (router.js imports
-// renderPeople/renderLocations from people.js on line 13; people.js
-// imports navigateTo back from router.js). Function declarations are
-// fully hoisted - usable the instant a module starts evaluating, before
-// any of its other top-level code has run. `const`/`let` bindings
-// (including `const navigateTo = () => {}`) are NOT usable until their
-// declaration line has actually executed; they sit in the "temporal dead
-// zone" until then. Nothing in this app hits that window today, but
-// converting it would trade a real safety margin for a purely cosmetic
-// win, so it stays a function declaration.
 
 import { getViewRendered, setCurrentPage } from "./state.js";
 import renderDashboard from "./views/dashboard.js";

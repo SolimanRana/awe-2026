@@ -2,7 +2,7 @@ import tseslint from "typescript-eslint";
 
 export default [
   {
-    files: ["js/**/*.{js,ts}"],
+    files: ["js/**/*.{js,ts}", "src/**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: "module",
