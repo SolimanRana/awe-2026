@@ -1,4 +1,5 @@
 import type { Location } from "../../js/types";
+import Badge from "../components/Badge";
 
 type LocationsListProps = {
   locations: Location[];
@@ -13,7 +14,8 @@ function LocationsList({ locations }: LocationsListProps) {
         // DEMO 3: key = the location's id from the data (e.g. "L01").
         <div className="location-card" key={location.id}>
           <h3>
-            {location.id} &mdash; {location.name}
+            {/* DEMO 7: reusable Badge, use no. 2 */}
+            <Badge label={location.id} variant="relevant" /> {location.name}
           </h3>
           <p>{location.description}</p>
           <p>

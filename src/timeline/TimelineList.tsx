@@ -1,26 +1,29 @@
-import type { TimelineEvent } from "../../js/types";
+import type { Person, TimelineEvent } from "../../js/types";
+import TimelineEventCard from "./TimelineEventCard";
 
 type TimelineListProps = {
   events: TimelineEvent[];
+  people: Person[];
 };
 
 // DEMO 3: the third collection, the timeline events.
 // Old version: renderTimeline() in js/views/timeline.ts (string + innerHTML).
-function TimelineList({ events }: TimelineListProps) {
+// DEMO 5: before the split, this component did two jobs: the list AND the
+// markup of every single event. Now it only does the list part: empty state
+// and one TimelineEventCard per event. How a card looks is not its job.
+function TimelineList({ events, people }: TimelineListProps) {
+  // DEMO 2 (technique: early return): an empty list gets its own message
+  // instead of an empty container. To show it, pass [] as events in App.tsx.
+  if (events.length === 0) {
+    return <p>No timeline events match.</p>;
+  }
+
   return (
     <div className="timeline-container">
       {events.map((event) => (
         // DEMO 3: key = the event's id from the data (e.g. "T01").
-        <div
-          className={"timeline-event certainty-" + event.certainty}
-          key={event.id}
-        >
-          <div className="timeline-time">
-            {new Date(event.time).toLocaleString()} &middot; {event.certainty}
-          </div>
-          <h3>{event.title}</h3>
-          <p>{event.description}</p>
-        </div>
+        // The key goes on the element that map returns, here the card component.
+        <TimelineEventCard event={event} people={people} key={event.id} />
       ))}
     </div>
   );

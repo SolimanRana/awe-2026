@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import type { Person } from "../../js/types";
 
 type PeopleListProps = {
@@ -22,7 +23,10 @@ function PeopleList({ people }: PeopleListProps) {
               alt={"Portrait of " + person.name}
             />
             <div>
-              <h3>{person.name}</h3>
+              <h3>
+                {/* DEMO 9: link to the parameterized route of this person */}
+                <Link to={"/team/people/" + person.id}>{person.name}</Link>
+              </h3>
               <div className="person-role">{person.role}</div>
             </div>
           </div>

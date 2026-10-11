@@ -846,3 +846,13 @@ a:focus-visible {
     display: block;
   }
 }
+
+/* React version: NavLink renders an <a> instead of a <button> */
+a.nav-btn,
+a.tab-btn {
+  text-decoration: none;
+}
+
+a.tab-btn {
+  color: inherit;
+}
