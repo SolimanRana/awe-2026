@@ -2,11 +2,12 @@ import { HashRouter, Navigate, Route, Routes } from "react-router";
 import type { AppData } from "./data";
 import Header from "./shell/Header";
 import NotFoundPage from "./shell/NotFoundPage";
-import PlaceholderPage from "./components/PlaceholderPage";
 import DashboardPage from "./dashboard/DashboardPage";
+import EvidencePage from "./evidence/EvidencePage";
 import TeamPage from "./people-locations/TeamPage";
 import PersonDetailPage from "./people-locations/PersonDetailPage";
 import TimelinePage from "./timeline/TimelinePage";
+import WorkspacePage from "./workspace/WorkspacePage";
 
 type AppProps = {
   data: AppData;
@@ -24,12 +25,24 @@ function App({ data }: AppProps) {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage data={data} />} />
+          {/* Exercise 5: the Evidence Catalogue, without and with an open detail */}
           <Route
             path="/evidence"
             element={
-              <PlaceholderPage
-                title="Evidence"
-                note="Not migrated yet (Exercise 5)."
+              <EvidencePage
+                evidence={data.evidence}
+                people={data.people}
+                locations={data.locations}
+              />
+            }
+          />
+          <Route
+            path="/evidence/:evidenceId"
+            element={
+              <EvidencePage
+                evidence={data.evidence}
+                people={data.people}
+                locations={data.locations}
               />
             }
           />
@@ -74,13 +87,11 @@ function App({ data }: AppProps) {
               />
             }
           />
+          {/* Exercise 5: the Investigator Workspace */}
           <Route
             path="/workspace"
             element={
-              <PlaceholderPage
-                title="Workspace"
-                note="Not migrated yet (Exercise 5)."
-              />
+              <WorkspacePage evidence={data.evidence} people={data.people} />
             }
           />
           {/* DEMO 8: any URL that matches no route above */}
