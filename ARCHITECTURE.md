@@ -1,64 +1,41 @@
-# Architecture of the React version
+# Architecture
 
-The React version lives in `src/` and is opened through `react.html`. The old vanilla version (`index.html`, `js/`) keeps running next to it until the migration is finished (see Exercise 3, Demo 6).
+The React code lives in `src/` and is organised **by feature**: every view has its own folder.
 
 ## Folder structure
 
-The React code is organised **by feature**: every view of the app has its own folder, and only code that several features share lives in `components/`.
-
 ```
 src/
-├── main.tsx              entry point: loads the data, then mounts <App />
-├── App.tsx               the shell: router + header + one route per view
-├── data.ts               loads the JSON files (and the bookmarks) once at start-up
-├── components/           shared, used by more than one feature
-│   ├── Badge.tsx
+├── main.tsx              start of the app, loads the data
+├── App.tsx               the app itself, one route per view
+├── data.ts               loads the JSON files
+│
+├── dashboard/            Dashboard view
+├── people-locations/     People & Locations view
+├── timeline/             Timeline view
+│
+├── components/           shared: used by more than one view
 │   ├── Section.tsx
+│   ├── Badge.tsx
 │   └── PlaceholderPage.tsx
-├── shell/                the frame around every page
-│   ├── Header.tsx
-│   └── NotFoundPage.tsx
-├── dashboard/            feature: Dashboard
-│   ├── DashboardPage.tsx
-│   ├── CaseSummaryCard.tsx
-│   ├── StatCard.tsx
-│   ├── ReviewProgress.tsx
-│   ├── RecentEvidence.tsx
-│   └── RecentTimeline.tsx
-├── people-locations/     feature: People & Locations
-│   ├── TeamPage.tsx
-│   ├── PersonDetailPage.tsx
-│   ├── PeopleList.tsx
-│   └── LocationsList.tsx
-└── timeline/             feature: Timeline
-    ├── TimelinePage.tsx
-    ├── TimelineFilters.tsx
-    ├── TimelineList.tsx
-    └── TimelineEventCard.tsx
+│
+└── shell/                the frame around every page
+    ├── Header.tsx
+    └── NotFoundPage.tsx
 ```
 
-Evidence and Workspace are not migrated yet (Exercise 5). They will get their own folders `evidence/` and `workspace/`.
+- **View folders** (`dashboard/`, `people-locations/`, `timeline/`): everything that only this view needs.
+- **`components/`**: small building blocks that several views use.
+- **`shell/`**: the frame of the whole app. It exists once and is around every page, it is not used inside a view.
+- **Top level of `src/`**: the start of the app. It doesn't belong to any view.
+
+Evidence and Workspace are not migrated yet. They will get their own folders in Exercise 5.
 
 ## Rule: shared or feature-local?
 
-- A component that is used by **one feature only** lives in that feature's folder, even if it could be reused in theory. Example: `TimelineEventCard` is only used by the timeline, so it lives in `timeline/`.
-- A component moves to `components/` as soon as **a second feature** uses it. Example: `Badge` is used by the timeline, the locations and the dashboard, so it lives in `components/`.
-- `shell/` holds what belongs to the app as a whole, not to one view: the header with the navigation and the page for unknown URLs.
+| Used by…              | Goes into…       | Example                                                               |
+| --------------------- | ---------------- | --------------------------------------------------------------------- |
+| only **one** view     | that view folder | `TimelineEventCard`: only the timeline uses it → `timeline/`          |
+| **two or more** views | `components/`    | `Section`: People & Locations and the timeline use it → `components/` |
 
-## Naming
-
-- Each feature has one `...Page` component. It is the feature (container) component: it gets the data, reads the URL if needed and decides what to show.
-- All other components are presentational: they get everything through props and only render it.
-
-## Routing
-
-`App.tsx` uses React Router with a `HashRouter`, so the route is after the `#` (for example `react.html#/team/people`). This works on GitHub Pages without any server configuration.
-
-| URL                       | Page                       |
-| ------------------------- | -------------------------- |
-| `#/dashboard`             | `DashboardPage`            |
-| `#/team/people`           | `TeamPage` (tab people)    |
-| `#/team/locations`        | `TeamPage` (tab locations) |
-| `#/team/people/:personId` | `PersonDetailPage`         |
-| `#/timeline?person=...`   | `TimelinePage`             |
-| anything else             | `NotFoundPage`             |
+A component only moves to `components/` when a second view really uses it, not because it _could_ be reused one day.

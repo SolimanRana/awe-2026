@@ -1,6 +1,7 @@
 import type { Location } from "../../js/types";
 import Badge from "../components/Badge";
 
+// DEMO 1: explicitly typed props, no "any"
 type LocationsListProps = {
   locations: Location[];
 };
@@ -23,7 +24,7 @@ function LocationsList({ locations }: LocationsListProps) {
           </p>
           <ul>
             {location.contains.map((item) => (
-              // DEMO 3: nested list, the item text is unique per location.
+              // DEMO 3: list, the item text is unique per location.
               <li key={item}>{item}</li>
             ))}
           </ul>

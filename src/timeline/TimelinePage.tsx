@@ -37,7 +37,7 @@ function TimelinePage({ events, people, locations }: TimelinePageProps) {
         types={types}
         selectedPersonId={personId}
       />
-      {/* DEMO 2: to show the empty state, change events={visibleEvents} to events={[]} */}
+      {/* DEMO 2:  show the empty state, change events={visibleEvents} to events={[]} */}
       <TimelineList events={visibleEvents} people={people} />
     </Section>
   );

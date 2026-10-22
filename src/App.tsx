@@ -67,6 +67,7 @@ function App({ data }: AppProps) {
             path="/timeline"
             element={
               <TimelinePage
+                // DEMO 2: pass []
                 events={data.timeline}
                 people={data.people}
                 locations={data.locations}

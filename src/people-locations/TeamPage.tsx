@@ -8,6 +8,7 @@ import LocationsList from "./LocationsList";
 // local state (vanilla: switchPeopleTab() + classList), it comes from the
 // URL: /team/people or /team/locations. Both are real, bookmarkable routes.
 // DEMO 5: feature component - it gets the data and decides what to show.
+// DEMO 1: explicitly typed props, no "any"
 type TeamPageProps = {
   people: Person[];
   locations: Location[];

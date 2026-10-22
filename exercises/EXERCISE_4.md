@@ -82,14 +82,11 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 - [ ] Implement at least two real conditional-rendering cases in the views you're migrating. For example: an empty state (e.g. "no timeline events match" if applicable), and a state-dependent style/label (e.g. the active People/Locations tab, or a certainty badge's variant on a timeline event).
 - [ ] Use at least two different conditional-rendering techniques (e.g. a ternary, `&&`, early-return, or a lookup/mapping function) and be ready to justify which you used where.
 
-  Early return when the whole output is different, like an empty list. && for one optional piece, like the people line. And a lookup function for the badge, because there are more than two cases, so a ternary would get messy.
-
 **Questions** (depend on the tasks above)
 
 - [ ] Show one place where you used `condition && <Component />}` instead of a ternary. What would go wrong if `condition` were a number like `0` instead of a boolean and does that risk apply to your actual code?
 
   Here I use && for the people line. If the left side were a number like 0, React wouldn’t hide it, it would render the 0 as text. And yes, that risk applies to my code: personIds.length is a number, and three events have no people. That’s why I wrote length > 0, which is a real boolean.
-  (dann live 0 zeigen)
 
 - [ ] Why might returning `null` from a component be preferable to returning an empty `<div>` in some cases? Did you use either, and why?
 
@@ -143,18 +140,13 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 - [ ] Classify every component you've built so far as either "presentational" or "feature/container". Explain why.
 
-  ![alt text](image-5.png)
-  App is my feature or container component: it gets all the data from main.tsx and decides which part goes to which list. All the others are presentational. They get everything they need through props and only render it. None of them knows where the data comes from. They would work the same with test data.
+  **Feature/container:** `App`. It gets all the data and decides which part goes to which view.
+
+  **Presentational:** `PeopleList`, `LocationsList`, `TimelineList`, `TimelineEventCard`, `Section`. They only get their data through props and render it. None of them knows where the data comes from.
 
 - [ ] Find at least one component that's currently doing more than one job, and split it into two components with a clear boundary between them.
 
   TimelineList used to do two jobs: handling the list, and building the markup of every single event. I split it. TimelineList now only handles the list: the empty state, and one TimelineEventCard per event. TimelineEventCard only knows how one event looks. The only thing that connects them is the event prop.
-
-  1. Vorher (erzählen): TimelineList hat die Liste gemacht und das komplette HTML jeder einzelnen Event-Karte.
-
-  2. Jetzt: TimelineList.tsx macht nur noch die Liste: Leer-Meldung und ein <TimelineEventCard /> pro Event, mit dem key.
-
-  3. TimelineEventCard.tsx macht eine einzelne Karte: Datum, Badge, Titel, Beschreibung, People-Zeile.
 
 **Questions** (depend on the tasks above)
 
@@ -178,24 +170,15 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
   My React code is organised by feature. Every view has its own folder: dashboard, people-locations and timeline, with everything that only that view needs. Shared components like Badge and Section are in components, and the shell, so the header and the not-found page, is in its own folder. Evidence and workspace will get their own folders when I migrate them in Exercise 5.
 
-  zeigen:
-  - dashboard/, people-locations/, timeline/: ein Ordner pro View, mit allem, was nur diese View braucht.
-  - components/: was mehrere Views benutzen (Badge, Section, PlaceholderPage).
-  - shell/: der Rahmen der App (Header, NotFoundPage).
-  - direkt in src/: main.tsx, App.tsx, data.ts
-
 - [ ] Document the structure you landed on (a short `ARCHITECTURE.md` section or README snippet is enough) and the rule you used to decide what's "shared" versus "feature-local."
 
   I documented it in ARCHITECTURE.md: the folder tree, the rule for shared versus feature-local, and a table of all routes. The rule is simple: a component stays in its feature folder as long as only that feature uses it. As soon as a second feature needs it, it moves to components.
-
-  zeigen:
-  ARCHITECTURE.md öffnen (Strg+Shift+V für die Vorschau): die Ordnerübersicht, die Regel „shared oder feature-local", die Namensregel für ...Page-Komponenten und die Routing-Tabelle.
 
 **Questions** (depend on the tasks above)
 
 - [ ] What's the difference between organizing files "by type" (all components in one folder, all hooks in another) and "by feature"? What made you choose the structure you chose for this app specifically?
 
-  By type means one folder for all components, one for all hooks, one for all helpers. By feature means everything that belongs to one view is in one folder. I chose by feature because this app has five clearly separated views, and when I work on the timeline, everything I need is in the timeline folder, instead of picking files out of one big components folder. It also makes the next migrations easier: evidence and workspace just get their own folders.
+  By type means one folder for all components, one folder for all functions, and so on, no matter which view they belong to. By feature means everything that belongs to one view is in one folder. I chose by feature because this app has five clearly separated views, and when I work on the timeline, everything I need is in the timeline folder, instead of picking files out of one big components folder.
 
 - [ ] Where did you draw the line between a component that lives inside one feature folder and one that belongs in a shared/common folder? Give one real example of each from your own structure.
 
@@ -220,8 +203,6 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 - [ ] The original vanilla app had duplicated HTML-template code (the same card markup written out twice, slightly differently, in two functions). Compare that directly to what you just built. What does a reusable component give you that copy-pasted template strings didn't?
 
   In the old app.js, the badge markup is written out six times as a string, and not even in the same way: in one place the helper returns 'badge-reviewed', in another just 'reviewed'. If you wanted to change how a badge looks, you'd have to find and fix every copy, and it's easy to miss one. With a component there's one definition. Every use goes through the same props, TypeScript checks them, and a change in Badge.tsx changes every badge in the app at once.
-
-  (Zeigen (optional): app.js, Strg+F nach class="badge. Es kommt sechsmal vor, in zwei verschiedenen Schreibweisen: im Dashboard '<span class="badge ' + getStatusBadgeClass(...), wo die Funktion schon "badge-reviewed" zurückgibt, und in der Timeline '<span class="badge badge-' + certaintyBadgeClass(...), wo die Funktion nur "reviewed" zurückgibt.)
 
 ---
 

@@ -11,8 +11,7 @@ type TimelineEventCardProps = {
 };
 
 // DEMO 2 (technique: lookup function): maps a certainty value to the
-// badge colour class that already exists in styles.css.
-// Same mapping as certaintyBadgeClass() in js/views/timeline.ts.
+// badge colour class that already exists in css
 function certaintyBadgeClass(certainty: string): BadgeVariant {
   if (certainty === "confirmed") return "reviewed";
   if (certainty === "contradictory") return "critical";
@@ -29,6 +28,7 @@ function TimelineEventCard({ event, people }: TimelineEventCardProps) {
   return (
     <div className={"timeline-event certainty-" + event.certainty}>
       <div className="timeline-time">
+        {/* DEMO 1: a computed value inside {...} */}
         {new Date(event.time).toLocaleString()} &middot;{" "}
         {/* DEMO 2: state-dependent style, the badge colour depends on the certainty */}
         {/* DEMO 7: reusable Badge, use no. 1 */}
@@ -39,9 +39,7 @@ function TimelineEventCard({ event, people }: TimelineEventCardProps) {
       </div>
       <h3>{event.title}</h3>
       <p>{event.description}</p>
-      {/* DEMO 2 (technique: &&): only shown when the event has people.
-          "> 0" makes the left side a real boolean. Without it, events
-          with no people (T11-T13) would show a "0" on the page. */}
+      {/* DEMO 2 (technique: &&): only shown when the event has people.*/}
       {event.personIds.length > 0 && (
         <p className="evidence-meta">
           People:{" "}

@@ -856,3 +856,9 @@ a.tab-btn {
 a.tab-btn {
   color: inherit;
 }
+
+a.nav-btn,
+a.tab-btn,
+a.btn {
+  text-decoration: none;
+}

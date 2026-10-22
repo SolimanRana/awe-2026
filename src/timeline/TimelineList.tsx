@@ -1,19 +1,19 @@
 import type { Person, TimelineEvent } from "../../js/types";
 import TimelineEventCard from "./TimelineEventCard";
 
+// DEMO 1: explicitly typed props, no "any"
 type TimelineListProps = {
   events: TimelineEvent[];
   people: Person[];
 };
 
 // DEMO 3: the third collection, the timeline events.
-// Old version: renderTimeline() in js/views/timeline.ts (string + innerHTML).
 // DEMO 5: before the split, this component did two jobs: the list AND the
 // markup of every single event. Now it only does the list part: empty state
 // and one TimelineEventCard per event. How a card looks is not its job.
 function TimelineList({ events, people }: TimelineListProps) {
   // DEMO 2 (technique: early return): an empty list gets its own message
-  // instead of an empty container. To show it, pass [] as events in App.tsx.
+  // instead of an empty container. To show it, pass [] in TimeLinePage
   if (events.length === 0) {
     return <p>No timeline events match.</p>;
   }
