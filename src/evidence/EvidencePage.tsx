@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import type { Evidence, Location, Person } from "../../js/types";
 import Section from "../components/Section";
-import { loadBookmarks, saveBookmarks } from "../storage";
 import { filterAndSortEvidence } from "./evidenceFilters";
 import type {
   EvidenceFilters,
@@ -18,11 +17,18 @@ type EvidencePageProps = {
   evidence: Evidence[];
   people: Person[];
   locations: Location[];
+  // DEMO 5: the bookmarks are not state here anymore, they come from App
+  bookmarks: string[];
+  onToggleBookmark: (evidenceId: string) => void;
 };
 
-function EvidencePage({ evidence, people, locations }: EvidencePageProps) {
-  // the bookmarks live here for now, because the star button is here
-  const [bookmarks, setBookmarks] = useState<string[]>(loadBookmarks);
+function EvidencePage({
+  evidence,
+  people,
+  locations,
+  bookmarks,
+  onToggleBookmark,
+}: EvidencePageProps) {
   // DEMO 2: the search box and all filters are controlled inputs.
   // For now: one useState per value (seven in total).
   const [search, setSearch] = useState("");
@@ -62,17 +68,6 @@ function EvidencePage({ evidence, people, locations }: EvidencePageProps) {
     setRelevance("");
   }
 
-  // DEMO 3: toggling creates a NEW array, the old one is not changed.
-  // The vanilla app did bookmarks.push(id) and ev.bookmarked = true
-  // (mutation). filter() and [...bookmarks, id] both return a new array.
-  function toggleBookmark(evidenceId: string) {
-    const next = bookmarks.includes(evidenceId)
-      ? bookmarks.filter((id) => id !== evidenceId)
-      : [...bookmarks, evidenceId];
-    setBookmarks(next);
-    saveBookmarks(next);
-  }
-
   // DEMO 4: derived during render, not stored in state
   const visibleEvidence = filterAndSortEvidence(evidence, filters, people);
 
@@ -95,7 +90,7 @@ function EvidencePage({ evidence, people, locations }: EvidencePageProps) {
       <EvidenceList
         items={visibleEvidence}
         bookmarks={bookmarks}
-        onToggleBookmark={toggleBookmark}
+        onToggleBookmark={onToggleBookmark}
         onOpen={(id) => navigate("/evidence/" + id)}
       />
       {selected && (

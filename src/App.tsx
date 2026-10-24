@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { HashRouter, Navigate, Route, Routes } from "react-router";
 import type { AppData } from "./data";
+import { saveBookmarks } from "./storage";
 import Header from "./shell/Header";
 import NotFoundPage from "./shell/NotFoundPage";
 import DashboardPage from "./dashboard/DashboardPage";
@@ -18,13 +20,31 @@ type AppProps = {
 // works on GitHub Pages without any server configuration, like the vanilla
 // app's hash routing - but the router does the matching, not handleHashChange.
 function App({ data }: AppProps) {
+  // DEMO 5: the bookmark state lives HERE, in App. App is the lowest common
+  // ancestor of the Dashboard (count), the Evidence view (star button) and
+  // the Workspace (bookmarked list). Before, it lived in EvidencePage.
+  const [bookmarks, setBookmarks] = useState<string[]>(data.bookmarks);
+
+  // DEMO 3: toggling creates a NEW array, the old one is not changed.
+  // DEMO 5: the function lives next to the state and is passed down.
+  function toggleBookmark(evidenceId: string) {
+    const next = bookmarks.includes(evidenceId)
+      ? bookmarks.filter((id) => id !== evidenceId)
+      : [...bookmarks, evidenceId];
+    setBookmarks(next);
+    saveBookmarks(next);
+  }
+
   return (
     <HashRouter>
       <Header />
       <main className="app-main">
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<DashboardPage data={data} />} />
+          <Route
+            path="/dashboard"
+            element={<DashboardPage data={data} bookmarks={bookmarks} />}
+          />
           {/* Exercise 5: the Evidence Catalogue, without and with an open detail */}
           <Route
             path="/evidence"
@@ -33,6 +53,8 @@ function App({ data }: AppProps) {
                 evidence={data.evidence}
                 people={data.people}
                 locations={data.locations}
+                bookmarks={bookmarks}
+                onToggleBookmark={toggleBookmark}
               />
             }
           />
@@ -43,6 +65,8 @@ function App({ data }: AppProps) {
                 evidence={data.evidence}
                 people={data.people}
                 locations={data.locations}
+                bookmarks={bookmarks}
+                onToggleBookmark={toggleBookmark}
               />
             }
           />
@@ -91,7 +115,11 @@ function App({ data }: AppProps) {
           <Route
             path="/workspace"
             element={
-              <WorkspacePage evidence={data.evidence} people={data.people} />
+              <WorkspacePage
+                evidence={data.evidence}
+                people={data.people}
+                bookmarks={bookmarks}
+              />
             }
           />
           {/* DEMO 8: any URL that matches no route above */}

@@ -100,25 +100,14 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 - [ ] Identify the lowest common ancestor component of everywhere bookmark state needs to be read or changed (at minimum: an Evidence card's bookmark button, the Dashboard's bookmark count, and the Workspace's bookmarked-items list), and move the actual `useState` for bookmarks up to live there.
 
-  
-
 - [ ] Confirm that toggling a bookmark from the Evidence view is immediately reflected on the
       Dashboard the next time it's rendered.
-
-
-
 
 **Questions** (depend on the tasks above)
 
 - [ ] What does "lifting state up" actually mean, mechanically? Walk through where the bookmark state lived before you lifted it, and where it lives now.
 
-  
-
-
 - [ ] What would go wrong (be specific) if you had instead kept a separate `useState` for bookmarks inside each of the Dashboard, Evidence, and Workspace components?
-
-  
-
 
 ---
 

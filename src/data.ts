@@ -5,6 +5,7 @@ import type {
   Location,
   TimelineEvent,
 } from "../js/types";
+import { loadBookmarks } from "./storage";
 
 export type AppData = {
   caseData: CaseData;
@@ -18,17 +19,6 @@ export type AppData = {
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path);
   return (await response.json()) as T;
-}
-
-// The bookmarks are stored by the vanilla app under this key. They are read
-// once at start-up, so the React dashboard shows the same count.
-function loadBookmarks(): string[] {
-  try {
-    const raw = localStorage.getItem("remotion_bookmarks");
-    return raw ? (JSON.parse(raw) as string[]) : [];
-  } catch {
-    return [];
-  }
 }
 
 export async function loadData(): Promise<AppData> {
@@ -45,6 +35,7 @@ export async function loadData(): Promise<AppData> {
     people,
     locations,
     timeline,
+    // the saved bookmarks are read once at start-up (src/storage.ts)
     bookmarks: loadBookmarks(),
   };
 }

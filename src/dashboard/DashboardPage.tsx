@@ -12,9 +12,12 @@ import RecentTimeline from "./RecentTimeline";
 // Old version: renderDashboard() in js/views/dashboard.ts (string + innerHTML).
 type DashboardPageProps = {
   data: AppData;
+  // Exercise 5: the bookmarks come from App's state, not from the
+  // start-up data, so the count is always up to date.
+  bookmarks: string[];
 };
 
-function DashboardPage({ data }: DashboardPageProps) {
+function DashboardPage({ data, bookmarks }: DashboardPageProps) {
   // Derived values: calculated from the data on every render, not stored.
   // The vanilla dashboard only rendered on its first visit and could show
   // stale numbers. Here there is no render-cache flag at all.
@@ -77,7 +80,10 @@ function DashboardPage({ data }: DashboardPageProps) {
         <StatCard value={data.evidence.length} label="Evidence items" />
         <StatCard value={data.people.length} label="People" />
         <StatCard value={data.locations.length} label="Locations" />
-        <StatCard value={data.bookmarks.length} label="Bookmarked" />
+        {/* DEMO 4 + DEMO 5: derived from App's bookmark state on every render.
+            Before, this was data.bookmarks.length, read once at start-up,
+            so it went stale as soon as a bookmark was toggled. */}
+        <StatCard value={bookmarks.length} label="Bookmarked" />
         <StatCard value={reviewedCount} label="Reviewed" />
       </div>
 

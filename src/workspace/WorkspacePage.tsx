@@ -1,6 +1,6 @@
 import type { Evidence, Person } from "../../js/types";
 import Section from "../components/Section";
-import { loadBookmarks, loadNotes } from "../storage";
+import { loadNotes } from "../storage";
 import BookmarksList from "./BookmarksList";
 import NotesList from "./NotesList";
 import HypothesisForm from "./HypothesisForm";
@@ -9,13 +9,14 @@ import HypothesisForm from "./HypothesisForm";
 type WorkspacePageProps = {
   evidence: Evidence[];
   people: Person[];
+  // DEMO 5: the same bookmark list as the Dashboard and the Evidence view
+  bookmarks: string[];
 };
 
-function WorkspacePage({ evidence, people }: WorkspacePageProps) {
-  // for now read straight from localStorage, every time the page renders
-  // (the bookmark state lives in the Evidence view, not here)
-  const bookmarks = loadBookmarks();
+function WorkspacePage({ evidence, people, bookmarks }: WorkspacePageProps) {
+  // DEMO 4: derived from App's bookmark state, not stored
   const bookmarkedItems = evidence.filter((ev) => bookmarks.includes(ev.id));
+  // the notes are still read from localStorage here (lifted in Demo 6)
   const notes = loadNotes();
 
   return (
