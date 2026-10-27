@@ -15,18 +15,25 @@ type AppProps = {
   data: AppData;
 };
 
-// DEMO 8: App is the shell: header + navigation + one route per view.
-// HashRouter keeps the route after the # (react.html#/team/people), so it
-// works on GitHub Pages without any server configuration, like the vanilla
-// app's hash routing - but the router does the matching, not handleHashChange.
 function App({ data }: AppProps) {
-  // DEMO 5: the bookmark state lives HERE, in App. App is the lowest common
-  // ancestor of the Dashboard (count), the Evidence view (star button) and
-  // the Workspace (bookmarked list). Before, it lived in EvidencePage.
+  // DEMO 5: lifting state up.
+  // Three places need the bookmarks:
+  //   App                      <- the state lives HERE
+  //   ├── DashboardPage        reads it  (Bookmarked count)
+  //   ├── EvidencePage         reads AND changes it (star button)
+  //   └── WorkspacePage        reads it  (bookmarked list)
+  // App is their lowest common ancestor. Before, the useState was inside
+  // EvidencePage, so the Dashboard and the Workspace could not see it.
+  //
+  // BEFORE Demo 5, App had no state at all, and the routes were:
+  //   <DashboardPage data={data} />
+  //   <EvidencePage evidence={...} people={...} locations={...} />
+  //   <WorkspacePage evidence={...} people={...} />
   const [bookmarks, setBookmarks] = useState<string[]>(data.bookmarks);
 
+  // DEMO 5: the function that changes the state lives next to the state.
+  // It is passed down to the Evidence view as the prop onToggleBookmark.
   // DEMO 3: toggling creates a NEW array, the old one is not changed.
-  // DEMO 5: the function lives next to the state and is passed down.
   function toggleBookmark(evidenceId: string) {
     const next = bookmarks.includes(evidenceId)
       ? bookmarks.filter((id) => id !== evidenceId)
@@ -41,11 +48,13 @@ function App({ data }: AppProps) {
       <main className="app-main">
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* DEMO 5: the Dashboard only gets the value (to count it) */}
           <Route
             path="/dashboard"
             element={<DashboardPage data={data} bookmarks={bookmarks} />}
           />
-          {/* Exercise 5: the Evidence Catalogue, without and with an open detail */}
+          {/* DEMO 5: the Evidence view gets the value AND the function to
+              change it (two routes: without and with an open detail) */}
           <Route
             path="/evidence"
             element={
@@ -70,7 +79,6 @@ function App({ data }: AppProps) {
               />
             }
           />
-          {/* DEMO 8: People and Locations are two real routes */}
           <Route
             path="/team"
             element={<Navigate to="/team/people" replace />}
@@ -85,7 +93,6 @@ function App({ data }: AppProps) {
               />
             }
           />
-          {/* DEMO 9: a route with a parameter, e.g. /team/people/nova-byte */}
           <Route
             path="/team/people/:personId"
             element={<PersonDetailPage people={data.people} />}
@@ -104,14 +111,13 @@ function App({ data }: AppProps) {
             path="/timeline"
             element={
               <TimelinePage
-                // DEMO 2: pass []
                 events={data.timeline}
                 people={data.people}
                 locations={data.locations}
               />
             }
           />
-          {/* Exercise 5: the Investigator Workspace */}
+          {/* DEMO 5: the Workspace only gets the value (to list the items) */}
           <Route
             path="/workspace"
             element={
@@ -122,7 +128,6 @@ function App({ data }: AppProps) {
               />
             }
           />
-          {/* DEMO 8: any URL that matches no route above */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>

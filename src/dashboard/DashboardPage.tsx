@@ -7,20 +7,15 @@ import ReviewProgress from "./ReviewProgress";
 import RecentEvidence from "./RecentEvidence";
 import RecentTimeline from "./RecentTimeline";
 
-// The Dashboard view in React (Exercise 3, Demo 10).
-// Feature component: it gets the data and calculates the numbers.
-// Old version: renderDashboard() in js/views/dashboard.ts (string + innerHTML).
 type DashboardPageProps = {
   data: AppData;
-  // Exercise 5: the bookmarks come from App's state, not from the
+  // DEMO 5: the bookmarks come from App's state (props), not from the
   // start-up data, so the count is always up to date.
   bookmarks: string[];
 };
 
 function DashboardPage({ data, bookmarks }: DashboardPageProps) {
-  // Derived values: calculated from the data on every render, not stored.
-  // The vanilla dashboard only rendered on its first visit and could show
-  // stale numbers. Here there is no render-cache flag at all.
+  // DEMO 4: derived values, calculated from the data on every render
   const reviewedCount = data.evidence.filter(
     (ev) => ev.status.toLowerCase() === "reviewed",
   ).length;
@@ -29,7 +24,7 @@ function DashboardPage({ data, bookmarks }: DashboardPageProps) {
       ? 0
       : Math.round((reviewedCount / data.evidence.length) * 100);
 
-  // newest 5, newest first - copies, the original arrays are not changed
+  // DEMO 3: slice() makes a copy, so reverse() doesn't change the original
   const recentEvidence = data.evidence.slice(-5).reverse();
   const recentTimeline = data.timeline.slice(-5).reverse();
 
@@ -81,8 +76,10 @@ function DashboardPage({ data, bookmarks }: DashboardPageProps) {
         <StatCard value={data.people.length} label="People" />
         <StatCard value={data.locations.length} label="Locations" />
         {/* DEMO 4 + DEMO 5: derived from App's bookmark state on every render.
-            Before, this was data.bookmarks.length, read once at start-up,
-            so it went stale as soon as a bookmark was toggled. */}
+            BEFORE Demo 5:
+              <StatCard value={data.bookmarks.length} label="Bookmarked" />
+            data.bookmarks was read once at start-up, so the count went
+            stale as soon as a bookmark was toggled. */}
         <StatCard value={bookmarks.length} label="Bookmarked" />
         <StatCard value={reviewedCount} label="Reviewed" />
       </div>

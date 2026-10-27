@@ -107,7 +107,13 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 - [ ] What does "lifting state up" actually mean, mechanically? Walk through where the bookmark state lived before you lifted it, and where it lives now.
 
+  
+
+
 - [ ] What would go wrong (be specific) if you had instead kept a separate `useState` for bookmarks inside each of the Dashboard, Evidence, and Workspace components?
+
+  
+
 
 ---
 

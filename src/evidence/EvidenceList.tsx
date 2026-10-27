@@ -28,7 +28,8 @@ function EvidenceList({
           // DEMO 4: "is it bookmarked?" is derived from the bookmark list.
           // There is no bookmarked flag stored on the item.
           isBookmarked={bookmarks.includes(ev.id)}
-          // DEMO 6: the callback is only passed on, one more layer down
+          // DEMO 5 + DEMO 6: the callback is only passed on,
+          // one more layer down
           onToggleBookmark={onToggleBookmark}
           onOpen={onOpen}
         />

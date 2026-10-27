@@ -17,7 +17,15 @@ type EvidencePageProps = {
   evidence: Evidence[];
   people: Person[];
   locations: Location[];
-  // DEMO 5: the bookmarks are not state here anymore, they come from App
+  // DEMO 5: the bookmarks are NOT state here anymore. They come from App
+  // as props: the value, and a callback to ask App to change it.
+  //
+  // BEFORE Demo 5, the state and the function were here:
+  //   function EvidencePage({ evidence, people, locations }) {
+  //     const [bookmarks, setBookmarks] = useState<string[]>(loadBookmarks);
+  //     function toggleBookmark(evidenceId: string) { ... }
+  //     ...
+  //     <EvidenceList bookmarks={bookmarks} onToggleBookmark={toggleBookmark} />
   bookmarks: string[];
   onToggleBookmark: (evidenceId: string) => void;
 };
@@ -71,7 +79,7 @@ function EvidencePage({
   // DEMO 4: derived during render, not stored in state
   const visibleEvidence = filterAndSortEvidence(evidence, filters, people);
 
-  // the open detail comes from the URL (#/evidence/E04), like in Exercise 4
+  // the open detail comes from the URL (#/evidence/E04)
   const { evidenceId } = useParams();
   const selected = evidence.find((ev) => ev.id === evidenceId);
   const navigate = useNavigate();

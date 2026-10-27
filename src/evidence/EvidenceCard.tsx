@@ -32,8 +32,8 @@ function EvidenceCard({
         onClick={(e) => {
           // the click should not also open the detail of the card
           e.stopPropagation();
-          // DEMO 6: the card only CALLS the callback. The state is changed
-          // by the component that owns it.
+          // DEMO 5 + DEMO 6: the card only CALLS the callback.
+          // The state is changed by the component that owns it (App).
           onToggleBookmark(ev.id);
         }}
       >

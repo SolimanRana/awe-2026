@@ -9,12 +9,15 @@ import HypothesisForm from "./HypothesisForm";
 type WorkspacePageProps = {
   evidence: Evidence[];
   people: Person[];
-  // DEMO 5: the same bookmark list as the Dashboard and the Evidence view
+  // DEMO 5: the same bookmark list (from App) as the Dashboard and the
+  // Evidence view. Before, this page read localStorage on its own.
   bookmarks: string[];
 };
 
 function WorkspacePage({ evidence, people, bookmarks }: WorkspacePageProps) {
-  // DEMO 4: derived from App's bookmark state, not stored
+  // DEMO 4 + DEMO 5: derived from App's bookmark state, not stored
+  // BEFORE Demo 5, this page read localStorage on its own:
+  //   const bookmarks = loadBookmarks();
   const bookmarkedItems = evidence.filter((ev) => bookmarks.includes(ev.id));
   // the notes are still read from localStorage here (lifted in Demo 6)
   const notes = loadNotes();
